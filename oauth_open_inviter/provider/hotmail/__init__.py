@@ -134,5 +134,5 @@ class HotmailProvider(BaseAccess, BaseProvider):
                     'name': ' '.join(name),
                     'emails': [email[0].childNodes[0].data, ]
                 })
-        contacts = HotmailFeed({'entry': contacts, 'paging': {}}, HotmailContact)
+        contacts = HotmailFeed({'data': contacts, 'paging': {}}, HotmailContact)
         return contacts
