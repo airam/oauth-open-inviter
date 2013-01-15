@@ -36,7 +36,7 @@ class HotmailOauthProvider(OAuth2Access, BaseProvider):
         base_url = 'https://apis.live.net/v5.0/%s/contacts' % username
         feed = self.search(base_url, url=url, start_index=start_index, max_results=max_results,
             kind='json', headers={'accept-encoding': 'gzip'})
-        return
+        return HotmailFeed(feed, Hotmail2Contact)
 
     def get_all_contacts(self, username='me'):
         next_link = None
