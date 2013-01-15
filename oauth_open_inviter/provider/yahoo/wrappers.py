@@ -9,7 +9,7 @@ class YahooFeed(object):
     @property
     def entries(self):
         if self.feed:
-            return [self.converter(entry) for entry in self.feed.get(self.entries_key)]
+            return [self.converter(entry) for entry in self.feed.get(self.entries_key, [])]
         return []
 
     @property

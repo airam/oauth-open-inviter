@@ -15,7 +15,7 @@ class GmailFeed(object):
     @property
     def entries(self):
         if self.feed:
-            return [self.converter(entry) for entry in self.feed['entry']]
+            return [self.converter(entry) for entry in self.feed.get('entry', [])]
         return []
 
     @property

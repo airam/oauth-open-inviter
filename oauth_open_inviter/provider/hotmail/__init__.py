@@ -4,6 +4,7 @@ import xml.dom.minidom
 from oauth_open_inviter.oauth_access.access import BaseAccess, OAuth2Access
 from oauth_open_inviter.provider.base import BaseProvider
 from oauth_open_inviter.lib.WindowsLiveLogin import WindowsLiveLogin
+from oauth_open_inviter.provider.hotmail.wrappers import HotmailFeed, Hotmail2Contact, HotmailContact
 
 MAX_LIMIT = 25
 START_INDEX = 1
@@ -35,7 +36,7 @@ class HotmailOauthProvider(OAuth2Access, BaseProvider):
         base_url = 'https://apis.live.net/v5.0/%s/contacts' % username
         feed = self.search(base_url, url=url, start_index=start_index, max_results=max_results,
             kind='json', headers={'accept-encoding': 'gzip'})
-        return feed
+        return
 
     def get_all_contacts(self, username='me'):
         next_link = None
@@ -104,8 +105,8 @@ class HotmailProvider(BaseAccess, BaseProvider):
         response = urllib2.build_opener().open(req)
         return self.parse_contacts(response.read())
 
-    def get_all_contacts(self, username='default'):
-        return self.get_contacts()
+    def get_all_contacts(self, username='me'):
+        return self.get_contacts().entries
 
     def parse_contacts(self, xml_string):
         dom = xml.dom.minidom.parseString(xml_string)
@@ -133,4 +134,5 @@ class HotmailProvider(BaseAccess, BaseProvider):
                     'name': ' '.join(name),
                     'emails': [email[0].childNodes[0].data, ]
                 })
+        contacts = HotmailFeed({'entry': contacts, 'paging': {}}, HotmailContact)
         return contacts

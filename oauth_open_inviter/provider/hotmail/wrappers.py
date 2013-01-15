@@ -6,7 +6,7 @@ class HotmailFeed(object):
     @property
     def entries(self):
         if self.feed:
-            return [self.converter(entry) for entry in self.feed['entry']]
+            return [self.converter(entry) for entry in self.feed.get('data', [])]
         return []
 
     @property
@@ -18,7 +18,7 @@ class HotmailFeed(object):
         return self.feed['paging'].get('previous')
 
 
-class HotmailContact(object):
+class Hotmail2Contact(object):
     def __init__(self, entry):
         self.entry = entry
 
@@ -44,10 +44,7 @@ class HotmailContact(object):
 
     @property
     def emails(self):
-        emails = []
-        for e in self.entry['email_hashes']:
-            emails.append(e)
-        return emails
+        return self.entry.get('email_hashes', [])
 
     @property
     def user_id(self):
@@ -64,3 +61,17 @@ class HotmailContact(object):
     @property
     def gender(self):
         return self.entry['gender']
+
+
+class HotmailContact(object):
+    def __init__(self, entry):
+        self.entry = entry
+
+    @property
+    def name(self):
+        return self.entry.get('name', '')
+
+    @property
+    def emails(self):
+        return self.entry.get('emails', [])
+
