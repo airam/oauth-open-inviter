@@ -38,9 +38,9 @@ class YahooFeed(object):
 
 
 class YahooContact(object):
-    fields = {}
     def __init__(self, entry):
         self.entry = entry
+        self.fields = {}
         for field in self.entry.get('fields'):
             self.fields[field.get('type')] = field.get('value')
 
@@ -73,7 +73,7 @@ class YahooContact(object):
 
     @property
     def emails(self):
-        return [email for email in [self.fields.get('email', '').stip()] if email]
+        return [email for email in [self.fields.get('email', '').strip()] if email]
 
     @property
     def nickname(self):

@@ -1,5 +1,4 @@
 class GmailFeed(object):
-    links = {}
 
     def __init__(self, feed, converter):
         self.feed = feed
@@ -9,6 +8,7 @@ class GmailFeed(object):
         self.load_link()
 
     def load_link(self):
+        self.links = {}
         for link in self.feed['link']:
             self.links[link['rel']] = link['href']
 
