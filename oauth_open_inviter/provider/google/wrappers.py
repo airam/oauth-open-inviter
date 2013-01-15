@@ -3,7 +3,10 @@ class GmailFeed(object):
 
     def __init__(self, feed, converter):
         self.feed = feed
+        if self.feed and self.feed.has_key('feed'):
+            self.feed = self.feed['feed']
         self.converter = converter
+        self.load_link()
 
     def load_link(self):
         for link in self.feed['link']:
