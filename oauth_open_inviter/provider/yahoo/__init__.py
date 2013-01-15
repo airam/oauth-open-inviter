@@ -39,7 +39,7 @@ class YahooProvider(OAuthAccess, BaseProvider):
         contacts.update({'base_url': base_url})
         return YahooFeed(contacts, YahooContact, entries_key='contact')
 
-    def get_all_contacts(self, username='default'):
+    def get_all_contacts(self, username='me'):
         next_link = None
         try:
             while True:

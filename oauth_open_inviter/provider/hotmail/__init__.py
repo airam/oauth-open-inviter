@@ -37,7 +37,7 @@ class HotmailOauthProvider(OAuth2Access, BaseProvider):
             kind='json', headers={'accept-encoding': 'gzip'})
         return feed
 
-    def get_all_contacts(self, username='default'):
+    def get_all_contacts(self, username='me'):
         next_link = None
         try:
             while True:
