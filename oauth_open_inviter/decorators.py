@@ -6,6 +6,7 @@ import json
 
 from django.conf import settings
 from django.shortcuts import redirect
+from django.http import HttpResponseBadRequest
 
 from oauth_open_inviter.provider.google import GmailProvider
 from oauth_open_inviter.provider.hotmail import HotmailProvider, HotmailOauthProvider
@@ -41,7 +42,7 @@ def get_contacts(view):
 
         provider_class = providers.get(service_name)
 
-        if 'open_inviter_service' not in request.session:
+        if request.GET.get('service'):
             data = PROVIDER_CREDENTIALS.get(service_name)
             data['callback_url'] = request.build_absolute_uri(request.path)
             provider = provider_class(**data)
@@ -50,7 +51,7 @@ def get_contacts(view):
             if token:
                 request.session['open_inviter_data'] = json.dumps(token)
             return redirect(provider.get_auth_url())
-        else:
+        elif 'open_inviter_service' in request.session:
             params = dict(PROVIDER_CREDENTIALS.get(service_name))
             params['callback_url'] = request.build_absolute_uri(request.path)
             params.update(json.loads(request.session.get('open_inviter_data', '[]')))
@@ -62,5 +63,7 @@ def get_contacts(view):
             if 'open_inviter_data' in request.session:
                 del request.session['open_inviter_data']
             return view(request, contact_provider=provider, **kwargs)
+        else:
+            return HttpResponseBadRequest('')
 
     return wrapped_func

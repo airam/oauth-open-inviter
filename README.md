@@ -6,8 +6,10 @@ and Python-contact-importer(https://github.com/millioner/Python-contact-importer
 
 SETTINGS
 --------
-The basic configuration is in https://github.com/mpcabd/Python-contact-importer#readme, however we changed the name of
-the setting variable CONTACT_IMPORT_SETTINGS to with OAUTH_OPEN_INVITER_SETTINGS.
+The basic configuration is in https://github.com/mpcabd/Python-contact-importer#readme, however we use the google oauth2
+api and you need the consumer token and consumer token secret generated when you registre your application in
+https://code.google.com/apis/console/#access (don't forget to put you absolute authorized redirect uris); we also
+changed the setting variable CONTACT_IMPORT_SETTINGS name to with OAUTH_OPEN_INVITER_SETTINGS.
 
 USAGE
 -----
