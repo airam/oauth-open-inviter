@@ -22,7 +22,8 @@ class Client(oauth.Client):
         is_multipart = method == "POST" and headers.get("Content-Type", DEFAULT_CONTENT_TYPE) != DEFAULT_CONTENT_TYPE
 
         if body and method == "POST" and not is_multipart:
-            parameters = dict(parse_qsl(body)).update(parameters or {})
+            parameters = dict(parse_qsl(body))
+            parameters.update(parameters or {})
 
         req = oauth.Request.from_consumer_and_token(self.consumer,
             token=self.token, http_method=method, http_url=uri,
