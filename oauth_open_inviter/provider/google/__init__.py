@@ -6,6 +6,7 @@ MAX_LIMIT = 25
 START_INDEX = 1
 MAX_RESULTS = 50
 
+
 class GmailProvider(OAuth2Access, BaseProvider):
     """
     Class for getting contacts from gmail account
@@ -17,8 +18,8 @@ class GmailProvider(OAuth2Access, BaseProvider):
 
     scope_urls = ['https://www.google.com/m8/feeds/']
 
-    def search(self, base_url, extra_params=None,
-               url=None, start_index=START_INDEX, max_results=MAX_RESULTS, **kwargs):
+    def search(self, base_url, extra_params=None, url=None, start_index=START_INDEX,
+               max_results=MAX_RESULTS, **kwargs):
         feed_url = url or base_url
         url_params = {'start-index': start_index,'max-results': max_results}
         if url:
@@ -49,4 +50,3 @@ class GmailProvider(OAuth2Access, BaseProvider):
                     break
         except Exception, ex:
             pass
-

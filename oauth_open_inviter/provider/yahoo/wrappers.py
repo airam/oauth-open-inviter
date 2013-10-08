@@ -1,5 +1,6 @@
 import urllib
 
+
 class YahooFeed(object):
     def __init__(self, feed, converter, entries_key=''):
         self.feed = feed
@@ -19,9 +20,8 @@ class YahooFeed(object):
         total = self.feed.get('total', 0)
         count = self.feed.get('count', 50)
         if self.feed.get(self.entries_key) and start + 1 < total:
-            params = urllib.urlencode({'format': self.feed.get('format', 'json'),
-                                        'start': start + count,
-                                        'count': count})
+            params = urllib.urlencode({'format': self.feed.get('format', 'json'), 'start': start + count,
+                                       'count': count})
             return '%s?%s' % (uri, params)
 
     @property
@@ -29,11 +29,9 @@ class YahooFeed(object):
         uri = self.feed['base_url']
         start = self.feed.get('start')
         count = self.feed.get('count', 50)
-        if start and start > 0 :
+        if start and start > 0:
             start = start - count
-            params = urllib.urlencode({'format': self.feed.get('format', 'json'),
-                                   'start': start,
-                                   'count': count})
+            params = urllib.urlencode({'format': self.feed.get('format', 'json'), 'start': start, 'count': count})
             return '%s?%s' % (uri, params)
 
 

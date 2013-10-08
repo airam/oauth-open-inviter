@@ -74,4 +74,3 @@ class HotmailContact(object):
     @property
     def emails(self):
         return self.entry.get('emails', [])
-

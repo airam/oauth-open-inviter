@@ -1,4 +1,5 @@
-import urllib, urllib2
+import urllib
+import urllib2
 import xml.dom.minidom
 
 from oauth_open_inviter.oauth_access.access import BaseAccess, OAuth2Access
@@ -9,6 +10,7 @@ from oauth_open_inviter.provider.hotmail.wrappers import HotmailFeed, Hotmail2Co
 MAX_LIMIT = 25
 START_INDEX = 1
 MAX_RESULTS = 50
+
 
 class HotmailOauthProvider(OAuth2Access, BaseProvider):
     """
@@ -35,7 +37,7 @@ class HotmailOauthProvider(OAuth2Access, BaseProvider):
     def get_contacts(self, username='me', url=None, start_index=START_INDEX, max_results=MAX_RESULTS):
         base_url = 'https://apis.live.net/v5.0/%s/contacts' % username
         feed = self.search(base_url, url=url, start_index=start_index, max_results=max_results,
-            kind='json', headers={'accept-encoding': 'gzip'})
+                           kind='json', headers={'accept-encoding': 'gzip'})
         return HotmailFeed(feed, Hotmail2Contact)
 
     def get_all_contacts(self, username='me'):

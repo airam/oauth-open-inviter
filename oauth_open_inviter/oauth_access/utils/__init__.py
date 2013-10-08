@@ -4,6 +4,7 @@ import urllib
 import oauth2 as oauth
 from urlparse import parse_qs, parse_qsl, urlparse
 
+
 class Client(oauth.Client):
     """
     Custom client to support forcing Authorization header (which is required
@@ -25,9 +26,8 @@ class Client(oauth.Client):
             parameters = dict(parse_qsl(body))
             parameters.update(parameters or {})
 
-        req = oauth.Request.from_consumer_and_token(self.consumer,
-            token=self.token, http_method=method, http_url=uri,
-            parameters=parameters)
+        req = oauth.Request.from_consumer_and_token(self.consumer, token=self.token, http_method=method, http_url=uri,
+                                                    parameters=parameters)
 
         req.sign_request(self.method, self.consumer, self.token)
 
@@ -53,9 +53,8 @@ class Client(oauth.Client):
                 # don't call update twice.
                 headers.update(req.to_header())
 
-        return httplib2.Http.request(self, uri, method=method, body=body,
-            headers=headers, redirections=redirections,
-            connection_type=connection_type)
+        return httplib2.Http.request(self, uri, method=method, body=body, headers=headers,
+                                     redirections=redirections, connection_type=connection_type)
 
 
 class OAuth20Token(object):

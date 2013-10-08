@@ -27,6 +27,7 @@ PROVIDER_CREDENTIALS = settings.OAUTH_OPEN_INVITER_SETTINGS
 if type(PROVIDER_CREDENTIALS) != dict:
     raise AttributeError('OAUTH_OPEN_INVITER_SETTINGS is not dictionary')
 
+
 def get_contacts(view):
 
     def wrapped_func(request, **kwargs):

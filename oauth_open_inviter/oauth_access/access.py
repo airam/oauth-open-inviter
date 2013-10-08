@@ -3,12 +3,12 @@ import urllib
 import httplib2
 import oauth2 as oauth
 import simplejson as json
-import datetime
 
 from oauth_open_inviter.oauth_access.utils.anyetree import etree
 from oauth_open_inviter.oauth_access.utils.multipart import get_headers_and_body
 from oauth_open_inviter.oauth_access.utils import OAuth20Token, Client
 from oauth_open_inviter.oauth_access.exceptions import NotAuthorized, ServiceFail, MissingToken
+
 
 class BaseAccess(object):
 
@@ -19,7 +19,7 @@ class BaseAccess(object):
     scope_urls = []
     extra_auth_params = {}
 
-    def __init__(self, consumer_key, consumer_secret,  *args, **kwargs):
+    def __init__(self, consumer_key, consumer_secret, **kwargs):
         """
         Init function
         Keyword params:
@@ -108,7 +108,7 @@ class OAuthAccess(BaseAccess):
         token = dict(urlparse.parse_qsl(content))
         self.oauth_token = token.get('oauth_token')
         self.oauth_token_secret = token.get('oauth_token_secret')
-        return { 'oauth_token': self.oauth_token, 'oauth_token_secret': self.oauth_token_secret }
+        return {'oauth_token': self.oauth_token, 'oauth_token_secret': self.oauth_token_secret}
 
     def get_auth_url(self):
         """
@@ -116,11 +116,7 @@ class OAuthAccess(BaseAccess):
         Returns an url for auth user redirecting
         """
         token = oauth.Token(self.oauth_token, self.oauth_token_secret)
-        request = oauth.Request.from_consumer_and_token(
-            self.consumer,
-            token = token,
-            http_url = self.authorize_url,
-        )
+        request = oauth.Request.from_consumer_and_token(self.consumer, token=token, http_url=self.authorize_url)
         request.sign_request(self.signature_method, self.consumer, token)
         return request.to_url()
 
@@ -147,7 +143,7 @@ class OAuthAccess(BaseAccess):
             request_kwargs['headers'] = headers
         if method == "POST":
             request_kwargs["body"] = urllib.urlencode(kwargs.get("params"))
-        elif method =='GET':
+        elif method == 'GET':
             request_kwargs['parameters'] = kwargs.get('params')
         return client.request(url, **request_kwargs)
 
@@ -155,11 +151,7 @@ class OAuthAccess(BaseAccess):
 class OAuth2Access(OAuthAccess):
 
     def get_auth_params(self):
-        params = dict(
-            client_id = self.consumer_key,
-            redirect_uri = self.callback_url,
-            response_type = 'code'
-        )
+        params = dict(client_id=self.consumer_key, redirect_uri=self.callback_url, response_type='code')
         if self.extra_auth_params:
             params.update(self.extra_auth_params)
         return params
@@ -181,16 +173,9 @@ class OAuth2Access(OAuthAccess):
         """
         code = getattr(self, 'code', None)
         if code:
-            body = self.get_params(dict(
-                client_id = self.consumer_key,
-                redirect_uri = self.callback_url,
-                client_secret = self.consumer_secret,
-                code = code,
-                grant_type = 'authorization_code'
-            ))
-            headers = {
-                'content-type': 'application/x-www-form-urlencoded',
-                }
+            body = self.get_params(dict(client_id=self.consumer_key, redirect_uri=self.callback_url,
+                                        client_secret=self.consumer_secret, code=code, grant_type='authorization_code'))
+            headers = {'content-type': 'application/x-www-form-urlencoded'}
 
             if self.user_agent is not None:
                 headers['user-agent'] = self.user_agent
@@ -198,8 +183,7 @@ class OAuth2Access(OAuthAccess):
             if http is None:
                 http = httplib2.Http()
 
-            resp, content = http.request(self.access_token_url, method='POST', body=body,
-                headers=headers)
+            resp, content = http.request(self.access_token_url, method='POST', body=body, headers=headers)
 
             try:
                 d = json.loads(content)
@@ -246,5 +230,3 @@ class OAuth2Access(OAuthAccess):
             url += "?%s" % urllib.urlencode(params)
         http = httplib2.Http()
         return http.request(url, **request_kwargs)
-
-

@@ -17,4 +17,3 @@ class BaseProvider(object):
         Returns a contact list
         """
         return [c for c in self.get_contacts()]
-

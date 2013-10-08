@@ -21,7 +21,8 @@ import base64
 import time
 import re
 
-class WLLError(Exception): # pragma: no cover
+
+class WLLError(Exception):  # pragma: no cover
 
     """All fatal errors in this class will throw this exception."""
 
@@ -31,12 +32,13 @@ class WLLError(Exception): # pragma: no cover
     def __str__(self):
         return repr(self.value)
 
-class ConsentToken : # pragma: no cover
+
+class ConsentToken:  # pragma: no cover
 
     """Holds the Consent Token object corresponding to consent granted. """
 
     def __init__(self, wll, delegationToken, refreshToken, sessionKey, expiry,
-                 offers, locationID, context, decodedToken, token ):
+                 offers, locationID, context, decodedToken, token):
         """Initialize the ConsentToken module with the WindowsLiveLogin,
         delegation token, refresh token, session key, expiry, offers,
         location ID, context, decoded token, and raw token.
@@ -111,10 +113,10 @@ class ConsentToken : # pragma: no cover
             if pair.find(":") >= 0:
                 k, v = pair.split(':')
                 if offer_s:
-                    offer_s = offer_s + ','
+                    offer_s += ','
                 offer_s = offer_s + k
                 offers_a[counter] = k
-                counter = counter + 1
+                counter += 1
 
         self.__offers = offers_a
         self.__offers_string = offer_s
@@ -171,7 +173,7 @@ class ConsentToken : # pragma: no cover
         expiry = self.getExpiry()
         return (now - 300) < expiry
 
-    def refresh (self):
+    def refresh(self):
         """Refreshes the current token and replace it. If operation succeeds
         true (1) is returned to signify success."""
         ct = self.__wll.refreshConsentToken(self)
@@ -194,7 +196,7 @@ class ConsentToken : # pragma: no cover
         self.__token = ct.__token
 
 
-class User: # pragma: no cover
+class User:  # pragma: no cover
 
     """Holds the user information after a successful sign-in."""
 
@@ -250,7 +252,7 @@ class User: # pragma: no cover
         if flags:
             try:
                 flags = int(flags)
-                self.__usePersistentCookie = ((flags %2) == 1)
+                self.__usePersistentCookie = ((flags % 2) == 1)
             except:
                 raise WLLError("Error: User: Invalid flags: %s" % flags)
 
@@ -275,7 +277,8 @@ class User: # pragma: no cover
         """Sets the raw User token."""
         self.__token = token
 
-class WindowsLiveLogin: # pragma: no cover
+
+class WindowsLiveLogin:  # pragma: no cover
 
     ###################################################################
     # Implementation of the basic methods needed to perform
@@ -309,7 +312,8 @@ class WindowsLiveLogin: # pragma: no cover
         self.debug(error)
         raise WLLError(error)
 
-    def __init__(self, appid=None, secret=None, securityalgorithm=None, force_delauth_nonprovisioned=False, policyurl=None, returnurl=None):
+    def __init__(self, appid=None, secret=None, securityalgorithm=None, force_delauth_nonprovisioned=False,
+                 policyurl=None, returnurl=None):
         """# Initialize the WindowsLiveLogin module with the application ID,
         secret key, and security algorithm.
 
@@ -358,7 +362,6 @@ class WindowsLiveLogin: # pragma: no cover
         if returnurl:
             self.setReturnUrl(returnurl)
 
-
     @staticmethod
     def initFromXml(settingsFile):
         """Initialize the WindowsLiveLogin module from a settings file.
@@ -386,7 +389,7 @@ class WindowsLiveLogin: # pragma: no cover
 
         o.force_delauth_nonprovisioned = False
         if 'force_delauth_nonprovisioned' in settings:
-            o.__force_delauth_nonprovisioned  = (settings['force_delauth_nonprovisioned'].lower() == 'true')
+            o.__force_delauth_nonprovisioned = (settings['force_delauth_nonprovisioned'].lower() == 'true')
 
         if 'appid' in settings:
             o.setAppId(settings['appid'])
@@ -511,9 +514,11 @@ class WindowsLiveLogin: # pragma: no cover
     def getPolicyUrl(self):
         """Gets the privacy policy URL for your site."""
         if not self.__policyurl:
-            self.debug("Warning: In the initial release of Del Auth, a Policy URL must be configured in the SDK for both provisioned and non-provisioned scenarios.")
+            self.debug("Warning: In the initial release of Del Auth, a "
+                       "Policy URL must be configured in the SDK for both provisioned and non-provisioned scenarios.")
             if self.__force_delauth_nonprovisioned:
-                self.fatal("Error: getPolicyUrl: Policy URL must be set in a Del Auth non-provisioned scenario. Aborting.")
+                self.fatal("Error: getPolicyUrl: Policy URL must be set in a Del Auth non-provisioned scenario. "
+                           "Aborting.")
         return self.__policyurl
 
     def setReturnUrl(self, returnurl):
@@ -533,9 +538,9 @@ class WindowsLiveLogin: # pragma: no cover
         """Returns the return URL of your site."""
         if not self.__returnurl:
             if self.__force_delauth_nonprovisioned:
-                self.fatal("Error: getReturnUrl: Return URL must be set in a Del Auth non-provisioned scenario. Aborting.")
+                self.fatal("Error: getReturnUrl: Return URL must be set in a Del Auth non-provisioned scenario. "
+                           "Aborting.")
         return self.__returnurl
-
 
     def setBaseUrl(self, baseurl):
         """Sets the base URL to use for the Windows Live Login server.
@@ -584,7 +589,6 @@ class WindowsLiveLogin: # pragma: no cover
         if not self.__consenturl:
             return "https://consent.live.com/"
         return self.__consenturl
-
 
     def processLogin(self, fs):
         """Processes the sign-in response from the Windows Live Login server.
@@ -653,7 +657,7 @@ class WindowsLiveLogin: # pragma: no cover
             self.debug('Error: processToken: Invalid token specified.')
             return
 
-        decodedToken = self.decodeAndValidateToken (token)
+        decodedToken = self.decodeAndValidateToken(token)
         if not decodedToken:
             self.debug("Error: processToken: Failed to decode/validate token: " + token)
             return
@@ -669,8 +673,8 @@ class WindowsLiveLogin: # pragma: no cover
         sappid = decodedToken['appid']
         appid = self.getAppId()
         if sappid != appid:
-            self.debug("Error: processToken: Application ID in token (%s) did not match application ID in configuration (%s)." %
-                       (sappid, appid))
+            self.debug("Error: processToken: Application ID in token (%s) did not match application ID in "
+                       "configuration (%s)." % (sappid, appid))
             return
 
         timestamp = None
@@ -854,14 +858,9 @@ class WindowsLiveLogin: # pragma: no cover
         if 'lid' not in parsedtoken:
             parsedtoken['lid'] = None
         try:
-            consenttoken = ConsentToken(self,
-                parsedtoken['delt'],
-                parsedtoken['reft'],
-                parsedtoken['skey'],
-                parsedtoken['exp'],
-                parsedtoken['offer'],
-                parsedtoken['lid'],
-                context, decodedtoken, token)
+            consenttoken = ConsentToken(self, parsedtoken['delt'], parsedtoken['reft'], parsedtoken['skey'],
+                                        parsedtoken['exp'], parsedtoken['offer'], parsedtoken['lid'],
+                                        context, decodedtoken, token)
         except BaseException, e:
             self.debug("Error: processConsentToken: Contents of token considered invalid %s." % e)
         return consenttoken
@@ -934,7 +933,7 @@ class WindowsLiveLogin: # pragma: no cover
             cryptkey = self.__cryptkey
         if not cryptkey:
             self.fatal("Error: decodeToken: Secret key was not set. Aborting.")
-        token  = self.u64(token)
+        token = self.u64(token)
         if not token or (len(token) <= 16) or ((len(token) % 16) != 0):
             self.debug("Error: decodeToken: Attempted to decode invalid token.")
             return
@@ -946,7 +945,7 @@ class WindowsLiveLogin: # pragma: no cover
             if not aes128cbc:
                 raise WLLError("aes128cbc")
             return aes128cbc.decrypt(crypted)
-        except:
+        except Exception:
             self.debug("Error: decodeToken: Could not construct cipher object to decode token.")
         return
 
@@ -962,7 +961,7 @@ class WindowsLiveLogin: # pragma: no cover
             if not hmac:
                 raise WLLError("hmac")
             return hmac.digest()
-        except:
+        except Exception:
             self.debug("Error: signToken: Unable to construct hash object to sign token.")
         return
 
@@ -985,12 +984,10 @@ class WindowsLiveLogin: # pragma: no cover
             return
         return token
 
-
     ###################################################################
     # Implementation of the methods needed to perform Windows Live
     # application verification as well as trusted sign-in.
     ###################################################################
-
     def getAppVerifier(self, ip=None):
         """Generates an application verifier token. An IP address can
         optionally be included in the token.
@@ -1047,7 +1044,7 @@ class WindowsLiveLogin: # pragma: no cover
         Therefore we must extract <value> from the string and return it as
         seen here.
         """
-        url  = self.getAppLoginUrl(siteid, ip)
+        url = self.getAppLoginUrl(siteid, ip)
         body = self.fetch(url)
         if not body:
             self.debug("Error: getAppSecurityToken: Unable to fetch application security token.")
@@ -1085,13 +1082,18 @@ class WindowsLiveLogin: # pragma: no cover
         getAppRetCode instead, sign-in will be redirected to the
         application. Otherwise, an HTTP 200 response is returned.
         """
-        token  = self.getTrustedToken(user)
+        token = self.getTrustedToken(user)
         if not token:
             return
-        token  = '<wst:RequestSecurityTokenResponse xmlns:wst="http://schemas.xmlsoap.org/ws/2005/02/trust"><wst:RequestedSecurityToken><wsse:BinarySecurityToken xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">%s</wsse:BinarySecurityToken></wst:RequestedSecurityToken><wsp:AppliesTo xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"><wsa:EndpointReference xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"><wsa:Address>uri:WindowsLiveID</wsa:Address></wsa:EndpointReference></wsp:AppliesTo></wst:RequestSecurityTokenResponse>' % token
-        params = {}
-        params['wa'] = self.getSecurityAlgorithm()
-        params['wresult'] = token
+        token = '<wst:RequestSecurityTokenResponse xmlns:wst="http://schemas.xmlsoap.org/ws/2005/02/trust">' \
+                '<wst:RequestedSecurityToken><wsse:BinarySecurityToken ' \
+                'xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">%s' \
+                '</wsse:BinarySecurityToken></wst:RequestedSecurityToken><wsp:AppliesTo ' \
+                'xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">' \
+                '<wsa:EndpointReference xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">' \
+                '<wsa:Address>uri:WindowsLiveID</wsa:Address></wsa:EndpointReference></wsp:AppliesTo>' \
+                '</wst:RequestSecurityTokenResponse>' % token
+        params = {'wa': self.getSecurityAlgorithm(), 'wresult': token}
         if retcode:
             params['wctx'] = retcode
         return params
@@ -1106,8 +1108,7 @@ class WindowsLiveLogin: # pragma: no cover
         if not user:
             self.debug('Error: getTrustedToken: Null user specified.')
             return
-        token  = "appid=%s&uid=%s&ts=%s" %\
-                 (self.getAppId(), urllib.quote(user), self.getTimestamp())
+        token = "appid=%s&uid=%s&ts=%s" % (self.getAppId(), urllib.quote(user), self.getTimestamp())
         token += "&sig=" + self.e64(self.signToken(token))
         return urllib.quote(token)
 
@@ -1121,11 +1122,9 @@ class WindowsLiveLogin: # pragma: no cover
         Login server."""
         return self.getSecureUrl() + "logout.srf?appid=" + self.getAppId()
 
-
     ###################################################################
     # Helper methods.
     ###################################################################
-
     def parseSettings(self, settingsFile):
         """Function to parse the settings file."""
         settings = {}
@@ -1193,7 +1192,7 @@ class WindowsLiveLogin: # pragma: no cover
             return
         try:
             return urllib.quote(base64.encodestring(s))
-        except:
+        except Exception:
             return
 
     def u64(self, s):
@@ -1202,7 +1201,7 @@ class WindowsLiveLogin: # pragma: no cover
             return
         try:
             return base64.decodestring(urllib.unquote(s))
-        except:
+        except Exception:
             return
 
     def fetch(self, url):
