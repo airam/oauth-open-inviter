@@ -142,7 +142,7 @@ class OAuthAccess(BaseAccess):
         if headers:
             request_kwargs['headers'] = headers
         if method == "POST":
-            request_kwargs["body"] = urllib.urlencode(kwargs.get("params"))
+            request_kwargs["body"] = urllib.urlencode(kwargs.get("params"), True)
         elif method == 'GET':
             request_kwargs['parameters'] = kwargs.get('params')
         return client.request(url, **request_kwargs)
@@ -216,7 +216,7 @@ class OAuth2Access(OAuthAccess):
                 params.update(kwargs["params"])
 
             if not kwargs.has_key('files'):
-                request_kwargs["body"] = urllib.urlencode(params)
+                request_kwargs["body"] = urllib.urlencode(params, True)
             else:
                 headers, body = get_headers_and_body(fields=params, files=kwargs['files'])
                 request_kwargs['headers'] = headers
@@ -227,6 +227,6 @@ class OAuth2Access(OAuthAccess):
                 }
             if kwargs.has_key('params'):
                 params.update(kwargs["params"])
-            url += "?%s" % urllib.urlencode(params)
+            url += "?%s" % urllib.urlencode(params, True)
         http = httplib2.Http()
         return http.request(url, **request_kwargs)

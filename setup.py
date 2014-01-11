@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name = "oauth_open_inviter",
-    version = "0.1",
+    version = "1.0",
     author = "airam",
     author_email = "airam@ninjadevs.com",
     description = """Allows to export user contacts from Google, Yahoo! and Hotmail using oauth(2).
