@@ -1,8 +1,8 @@
+import json
 import urlparse
 import urllib
 import httplib2
 import oauth2 as oauth
-import simplejson as json
 
 from oauth_open_inviter.oauth_access.utils.anyetree import etree
 from oauth_open_inviter.oauth_access.utils.multipart import get_headers_and_body
