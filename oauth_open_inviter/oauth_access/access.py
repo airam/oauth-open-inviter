@@ -1,8 +1,8 @@
-import json
 import urlparse
 import urllib
 import httplib2
 import oauth2 as oauth
+import simplejson as json
 
 from oauth_open_inviter.oauth_access.utils.anyetree import etree
 from oauth_open_inviter.oauth_access.utils.multipart import get_headers_and_body
@@ -18,6 +18,7 @@ class BaseAccess(object):
     authorize_url = None
     scope_urls = []
     extra_auth_params = {}
+    force_auth_header = False
 
     def __init__(self, consumer_key, consumer_secret, **kwargs):
         """
@@ -138,7 +139,7 @@ class OAuthAccess(BaseAccess):
         client = Client(self.consumer, token=token)
         # @@@ LinkedIn requires Authorization header which is supported in
         # sub-classed version of Client (originally from oauth2)
-        request_kwargs = dict(method=method, force_auth_header=True)
+        request_kwargs = dict(method=method, force_auth_header=kwargs.get('force_auth_header', self.force_auth_header))
         if headers:
             request_kwargs['headers'] = headers
         if method == "POST":
